@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PATRIA DOMUM — строительство домов в Иркутске</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EEE7D8;
+    --paper-2:#E6DDC9;
+    --ink:#221F17;
+    --ink-soft:#565143;
+    --pine:#1B2B22;
+    --pine-2:#25382C;
+    --brick:#A24A31;
+    --brick-dark:#833A26;
+    --timber:#B4834D;
+    --cta:#D98F2B;
+    --cta-dark:#B5741D;
+    --line: rgba(34,31,23,0.18);
+    --line-dark: rgba(238,231,216,0.2);
+    --radius: 2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:17px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--brick); color:var(--paper);}
+  a{color:inherit;}
+  h1,h2,h3{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  .mono{
+    font-family:'IBM Plex Mono', monospace;
+    letter-spacing:0.02em;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--brick);
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:22px;
+    height:1px;
+    background:var(--brick);
+    display:inline-block;
+  }
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--brick);
+    outline-offset:3px;
+  }
+  .wrap{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 32px;
+  }
+  @media (max-width:640px){ .wrap{padding:0 20px;} }
+
+  /* blueprint grid texture */
+  .blueprint{
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:42px 42px;
+  }
+  .blueprint-dark{
+    background-image:
+      linear-gradient(var(--line-dark) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-dark) 1px, transparent 1px);
+    background-size:42px 42px;
+  }
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(238,231,216,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:20px 0;
+  }
+  .logo{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:20px;
+    letter-spacing:0.01em;
+  }
+  .logo span{ color:var(--brick); font-style:italic; font-weight:500;}
+  .nav-links{
+    display:flex; gap:34px;
+    list-style:none; margin:0; padding:0;
+    font-size:14.5px;
+  }
+  .nav-links a{
+    text-decoration:none;
+    position:relative;
+    padding-bottom:4px;
+  }
+  .nav-links a::after{
+    content:"";
+    position:absolute; left:0; bottom:0;
+    width:0; height:1px; background:var(--brick);
+    transition:width .25s ease;
+  }
+  .nav-links a:hover::after{ width:100%; }
+  .nav-phone{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:14.5px;
+    display:flex; align-items:center; gap:8px;
+    text-decoration:none;
+    white-space:nowrap;
+  }
+  .nav-phone::before{
+    content:"";
+    width:7px; height:7px; border-radius:50%;
+    background:var(--brick); display:inline-block;
+  }
+  .burger{ display:none; }
+  @media (max-width:860px){
+    .nav-links{ display:none; }
+    .burger{ display:block; }
+  }
+  @media (max-width:520px){
+    .header-cta{ display:none; }
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    overflow:hidden;
+    padding:96px 0 64px;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.05fr 0.95fr;
+    gap:40px;
+    align-items:center;
+  }
+  @media (max-width:940px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .hero-art{ order:-1; }
+  }
+  .hero h1{
+    font-size:clamp(38px, 5.2vw, 60px);
+    line-height:1.05;
+  }
+  .hero h1 em{
+    font-style:italic;
+    color:var(--brick);
+    font-weight:500;
+  }
+  .hero p.lede{
+    margin:26px 0 34px;
+    max-width:46ch;
+    font-size:18px;
+    color:var(--ink-soft);
+  }
+  .cta-row{ display:flex; align-items:center; gap:22px; flex-wrap:wrap; }
+  .btn{
+    display:inline-flex; align-items:center; gap:10px;
+    background:var(--cta);
+    color:#22190A;
+    text-decoration:none;
+    padding:15px 26px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:14px;
+    font-weight:500;
+    letter-spacing:0.03em;
+    border-radius:var(--radius);
+    border:1px solid var(--cta);
+    transition:transform .2s ease, background .2s ease;
+  }
+  .btn:hover{ background:var(--cta-dark); border-color:var(--cta-dark); transform:translateY(-1px); }
+  .btn-dark{
+    background:var(--pine);
+    color:var(--paper);
+    border-color:var(--pine);
+  }
+  .btn-dark:hover{ background:var(--pine-2); border-color:var(--pine-2); }
+  .btn-ghost{
+    background:transparent;
+    color:var(--ink);
+    border:1px solid var(--line);
+  }
+  .btn-ghost:hover{ background:transparent; border-color:var(--ink); color:var(--ink); }
+  .microtrust{
+    margin-top:16px;
+    font-size:13px;
+    color:var(--ink-soft);
+    display:flex; align-items:center; gap:8px;
+  }
+  .microtrust::before{ content:"✓"; color:var(--cta-dark); font-weight:600; }
+  .phone-inline{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:15px;
+    text-decoration:none;
+    border-bottom:1px solid var(--line);
+    padding-bottom:2px;
+  }
+
+  .hero-art{ position:relative; }
+  .hero-art svg{ width:100%; height:auto; display:block; }
+  .dim-line path, .dim-line line{
+    stroke-dasharray:1;
+    stroke-dashoffset:0;
+  }
+  .draw-path{
+    stroke-dasharray:900;
+    stroke-dashoffset:900;
+    animation:draw 2.4s ease forwards .2s;
+  }
+  @keyframes draw{ to{ stroke-dashoffset:0; } }
+
+  /* dimension-line label, the signature annotation device */
+  .tag{
+    position:relative;
+    padding-left:26px;
+  }
+  .tag::before{
+    content:"";
+    position:absolute; left:0; top:7px;
+    width:16px; height:1px; background:var(--brick);
+  }
+  .tag::after{
+    content:"";
+    position:absolute; left:0; top:3px;
+    width:1px; height:9px; background:var(--brick);
+  }
+  .tag-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.05em;
+    color:var(--brick);
+    text-transform:uppercase;
+  }
+
+  section{ padding:100px 0; }
+  @media (max-width:640px){ section{ padding:64px 0; } }
+  .section-head{
+    display:grid;
+    grid-template-columns:1fr 1.4fr;
+    gap:40px;
+    margin-bottom:56px;
+  }
+  @media (max-width:760px){ .section-head{ grid-template-columns:1fr; gap:18px; } }
+  .section-head h2{ font-size:clamp(28px, 3.4vw, 40px); line-height:1.12; margin-top:14px; }
+
+  /* ---------- about stats ---------- */
+  .stat-rail{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    margin-top:52px;
+  }
+  @media (max-width:760px){ .stat-rail{ grid-template-columns:1fr; } }
+  .stat{
+    background:var(--paper);
+    padding:34px 30px;
+  }
+  .stat .num{
+    font-family:'Fraunces', serif;
+    font-size:44px;
+    font-style:italic;
+    color:var(--brick);
+  }
+  .stat .cap{
+    margin-top:8px;
+    font-size:14.5px;
+    color:var(--ink-soft);
+    max-width:26ch;
+  }
+  .about-copy{ max-width:60ch; color:var(--ink-soft); font-size:16.5px; }
+  .about-copy strong{ color:var(--ink); font-weight:600; }
+
+  /* ---------- house types ---------- */
+  .house-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:26px;
+  }
+  @media (max-width:940px){ .house-grid{ grid-template-columns:repeat(2, 1fr); } }
+  @media (max-width:640px){ .house-grid{ grid-template-columns:1fr; } }
+  .house-card{
+    background:var(--paper-2);
+    border:1px solid var(--line);
+    padding:26px 24px 28px;
+    display:flex; flex-direction:column;
+  }
+  .house-card .icon{
+    width:100%;
+    height:74px;
+    margin-bottom:18px;
+  }
+  .house-card h3{ font-size:20px; margin-bottom:4px; }
+  .house-card .mat-label{
+    font-size:11.5px;
+    color:var(--ink-soft);
+    margin-bottom:14px;
+  }
+  .house-card p.desc{
+    font-size:15px;
+    color:var(--ink-soft);
+    margin:0 0 16px;
+  }
+  .house-card ul{
+    list-style:none; margin:0; padding:0;
+    font-size:14px;
+    display:flex; flex-direction:column; gap:8px;
+    margin-top:auto;
+  }
+  .house-card li{
+    padding-left:16px;
+    position:relative;
+  }
+  .house-card li::before{
+    content:"—";
+    position:absolute; left:0; color:var(--brick);
+  }
+  .card-cta{
+    display:inline-flex;
+    margin-top:18px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    color:var(--cta-dark);
+    text-decoration:none;
+    border-bottom:1px solid var(--cta-dark);
+    padding-bottom:2px;
+    width:fit-content;
+  }
+  .card-cta:hover{ color:var(--brick-dark); border-color:var(--brick-dark); }
+
+  /* ---------- lead form ---------- */
+  .lead{
+    background:var(--paper-2);
+    border:1px solid var(--line);
+    padding:48px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:48px;
+    align-items:center;
+  }
+  @media (max-width:820px){ .lead{ grid-template-columns:1fr; padding:32px 24px; } }
+  .lead h2{ font-size:clamp(26px,3vw,34px); line-height:1.15; }
+  .lead p{ color:var(--ink-soft); margin-top:14px; font-size:15px; max-width:42ch; }
+  .field{ margin-bottom:16px; }
+  .field label{
+    display:block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  .field input, .field select{
+    width:100%;
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:15px;
+    padding:12px 14px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink);
+    border-radius:var(--radius);
+  }
+  .field input:focus, .field select:focus{
+    outline:none;
+    border-color:var(--cta-dark);
+  }
+  .lead-form .btn{ width:100%; justify-content:center; margin-top:6px; }
+  .lead-note{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin-top:12px;
+    text-align:center;
+  }
+  .thanks{
+    display:none;
+    text-align:center;
+    padding:20px 0;
+  }
+  .thanks.show{ display:block; }
+  .thanks h3{ font-size:22px; margin-bottom:8px; }
+  .thanks p{ color:var(--ink-soft); margin:0; }
+
+  /* ---------- floating mobile bar ---------- */
+  .mobile-bar{
+    position:fixed;
+    left:0; right:0; bottom:0;
+    z-index:60;
+    display:none;
+    background:var(--pine);
+    border-top:1px solid rgba(238,231,216,0.15);
+    padding:10px 14px;
+    gap:10px;
+  }
+  .mobile-bar a{
+    flex:1;
+    text-align:center;
+    padding:13px 10px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    text-decoration:none;
+    border-radius:var(--radius);
+  }
+  .mobile-bar .call{ background:transparent; color:var(--paper); border:1px solid rgba(238,231,216,0.35); }
+  .mobile-bar .lead-btn{ background:var(--cta); color:#22190A; font-weight:500; }
+  @media (max-width:760px){
+    .mobile-bar{ display:flex; }
+    body{ padding-bottom:64px; }
+  }
+
+  /* ---------- process ---------- */
+  .process{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:0;
+    border-top:1px solid var(--line);
+  }
+  @media (max-width:820px){ .process{ grid-template-columns:1fr; } }
+  .step{
+    padding:34px 26px 34px 0;
+    border-right:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    position:relative;
+  }
+  @media (max-width:820px){ .step{ border-right:none; padding:26px 0; } }
+  .step .idx{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    color:var(--brick);
+    display:block;
+    margin-bottom:14px;
+  }
+  .step h3{ font-size:18px; margin-bottom:8px; }
+  .step p{ font-size:14.5px; color:var(--ink-soft); margin:0; }
+
+  /* ---------- contact / dark section ---------- */
+  .dark{
+    background:var(--pine);
+    color:var(--paper);
+  }
+  .dark .eyebrow{ color:var(--timber); }
+  .dark .eyebrow::before{ background:var(--timber); }
+  .contact-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:60px;
+    align-items:start;
+  }
+  @media (max-width:820px){ .contact-grid{ grid-template-columns:1fr; gap:40px; } }
+  .dark h2{ color:var(--paper); font-size:clamp(30px,3.6vw,44px); margin-top:14px; }
+  .contact-list{ list-style:none; margin:34px 0 0; padding:0; }
+  .contact-list li{
+    padding:18px 0;
+    border-top:1px solid rgba(238,231,216,0.16);
+    display:flex; justify-content:space-between; gap:20px;
+    font-size:15px;
+    flex-wrap:wrap;
+  }
+  .contact-list li:last-child{ border-bottom:1px solid rgba(238,231,216,0.16); }
+  .contact-list .k{ color:var(--timber); font-family:'IBM Plex Mono', monospace; font-size:12.5px; text-transform:uppercase; letter-spacing:0.08em; }
+  .contact-list a{ text-decoration:none; }
+  .contact-list a:hover{ color:var(--timber); }
+  .social-row{ display:flex; gap:16px; margin-top:30px; }
+  .social-row a{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    padding:9px 16px;
+    border:1px solid rgba(238,231,216,0.3);
+    text-decoration:none;
+    border-radius:var(--radius);
+  }
+  .social-row a:hover{ border-color:var(--timber); color:var(--timber); }
+
+  .site-plan{ width:100%; height:auto; }
+
+  footer{
+    background:var(--pine);
+    color:rgba(238,231,216,0.55);
+    font-size:13px;
+    padding:22px 0 30px;
+    border-top:1px solid rgba(238,231,216,0.14);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  }
+  footer .mono{ letter-spacing:0.04em; }
+
+  .reveal{
+    opacity:0; transform:translateY(18px);
+    transition:opacity .7s ease, transform .7s ease;
+  }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="logo">PATRIA <span>DOMUM</span></div>
+    <ul class="nav-links">
+      <li><a href="#about">О компании</a></li>
+      <li><a href="#houses">Технологии</a></li>
+      <li><a href="#process">Как строим</a></li>
+      <li><a href="#contact">Контакты</a></li>
+    </ul>
+    <div style="display:flex; align-items:center; gap:20px;">
+      <a class="nav-phone" href="tel:+79148951309">+7 914 895-13-09</a>
+      <a class="btn header-cta" style="padding:10px 18px; font-size:13px;" href="#lead">Рассчитать</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero blueprint">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Строительство домов «под ключ» · Иркутск</div>
+      <h1 style="margin-top:18px;">Дом — это не квадратные метры,<br> это <em>место, куда возвращаются</em></h1>
+      <p class="lede">PATRIA DOMUM с латыни переводится как «родной дом». Проектируем и строим частные дома и коттеджи под ключ: от выбора технологии и участка до вручения ключей — по проекту, по смете, с гарантией.</p>
+      <div class="cta-row">
+        <a class="btn" href="tel:+79148951309">Позвонить: +7 914 895-13-09</a>
+        <a class="btn btn-ghost" href="#houses">Выбрать технологию ↓</a>
+      </div>
+    </div>
+    <div class="hero-art">
+      <svg viewBox="0 0 460 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="#22261E" stroke-width="1.4" opacity="0.85">
+          <path class="draw-path" d="M70 260 L70 150 L230 60 L390 150 L390 260" stroke-linejoin="round" stroke-linecap="round"/>
+          <line x1="55" y1="260" x2="405" y2="260"/>
+          <rect x="180" y="180" width="60" height="80" />
+          <line x1="210" y1="180" x2="210" y2="260" stroke-dasharray="4 4" opacity="0.5"/>
+          <rect x="100" y="180" width="46" height="50"/>
+          <line x1="123" y1="180" x2="123" y2="230" stroke-dasharray="3 3" opacity="0.5"/>
+          <rect x="300" y="180" width="46" height="50"/>
+          <line x1="323" y1="180" x2="323" y2="230" stroke-dasharray="3 3" opacity="0.5"/>
+          <line x1="330" y1="60" x2="330" y2="20"/>
+          <rect x="322" y="0" width="16" height="22"/>
+        </g>
+        <g stroke="#A24A31" stroke-width="1" opacity="0.9">
+          <line x1="70" y1="290" x2="390" y2="290"/>
+          <line x1="70" y1="284" x2="70" y2="296"/>
+          <line x1="390" y1="284" x2="390" y2="296"/>
+        </g>
+        <text x="180" y="312" font-family="IBM Plex Mono, monospace" font-size="11" fill="#A24A31">пролёт 8400</text>
+        <g stroke="#22261E" stroke-width="0.6" opacity="0.35">
+          <line x1="0" y1="260" x2="460" y2="260"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="tag"><span class="tag-label">01 — О компании</span></div>
+      <h2>Давайте познакомимся: почему нам можно доверить свой дом</h2>
+    </div>
+    <div class="about-copy">
+      <p>Мы строим частные дома в Иркутске и области больше <strong>10 лет</strong> — от первого эскиза на встрече до момента, когда вы забираете ключи. На консультации помогаем понять, какая технология подойдёт именно вашему участку, бюджету и срокам, и вместе с вами продумываем планировку — так, чтобы в доме было удобно жить, а не только красиво фотографировать.</p>
+      <p>Все работы ведутся <strong>по проекту и утверждённой смете</strong> — без «доплат по ходу дела». На конструктив и основные виды работ даём письменную гарантию. Наша задача — не просто сдать объект, а построить дом, который будет тёплым, надёжным и по-настоящему вашим.</p>
+    </div>
+    <div class="stat-rail">
+      <div class="stat">
+        <div class="num">10+</div>
+        <div class="cap">лет строим частные дома и коттеджи под ключ</div>
+      </div>
+      <div class="stat">
+        <div class="num">0</div>
+        <div class="cap">скрытых доплат — фиксированная смета на весь проект</div>
+      </div>
+      <div class="stat">
+        <div class="num">5</div>
+        <div class="cap">технологий строительства на выбор под ваш участок и бюджет</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="houses" class="blueprint">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="tag"><span class="tag-label">02 — Технологии</span></div>
+      <h2>Какой дом выбрать</h2>
+    </div>
+    <div class="house-grid">
+
+      <div class="house-card">
+        <svg class="icon" viewBox="0 0 200 74"><g stroke="#221F17" stroke-width="1" fill="none" opacity="0.85">
+          <rect x="6" y="10" width="188" height="54"/>
+          <path d="M6 20 Q40 24 74 18 T142 22 T194 16" opacity="0.55"/>
+          <path d="M6 34 Q40 38 74 32 T142 36 T194 30" opacity="0.55"/>
+          <path d="M6 48 Q40 52 74 46 T142 50 T194 44" opacity="0.55"/>
+        </g></svg>
+        <h3>Монолитный дом</h3>
+        <div class="mat-label mono">заливка бетона в опалубку</div>
+        <p class="desc">Единая жёсткая конструкция без швов — заливается прямо на площадке под форму вашего проекта.</p>
+        <ul>
+          <li>Срок службы от 50–100 лет</li>
+          <li>Нет несущих стен внутри — планировка свободная</li>
+          <li>Хорошая герметичность и теплоизоляция</li>
+        </ul>
+        <a class="card-cta" href="#lead">Рассчитать стоимость →</a>
+      </div>
+
+      <div class="house-card">
+        <svg class="icon" viewBox="0 0 200 74"><g stroke="#221F17" stroke-width="1" opacity="0.85">
+          <rect x="6" y="10" width="188" height="54" fill="none"/>
+          <g>
+            <line x1="6" y1="22" x2="194" y2="22"/>
+            <line x1="6" y1="34" x2="194" y2="34"/>
+            <line x1="6" y1="46" x2="194" y2="46"/>
+            <line x1="6" y1="58" x2="194" y2="58"/>
+            <line x1="30" y1="10" x2="30" y2="22"/><line x1="70" y1="10" x2="70" y2="22"/><line x1="110" y1="10" x2="110" y2="22"/><line x1="150" y1="10" x2="150" y2="22"/>
+            <line x1="10" y1="22" x2="10" y2="34"/><line x1="50" y1="22" x2="50" y2="34"/><line x1="90" y1="22" x2="90" y2="34"/><line x1="130" y1="22" x2="130" y2="34"/><line x1="170" y1="22" x2="170" y2="34"/>
+            <line x1="30" y1="34" x2="30" y2="46"/><line x1="70" y1="34" x2="70" y2="46"/><line x1="110" y1="34" x2="110" y2="46"/><line x1="150" y1="34" x2="150" y2="46"/>
+            <line x1="10" y1="46" x2="10" y2="58"/><line x1="50" y1="46" x2="50" y2="58"/><line x1="90" y1="46" x2="90" y2="58"/><line x1="130" y1="46" x2="130" y2="58"/><line x1="170" y1="46" x2="170" y2="58"/>
+            <line x1="30" y1="58" x2="30" y2="64"/><line x1="70" y1="58" x2="70" y2="64"/><line x1="110" y1="58" x2="110" y2="64"/><line x1="150" y1="58" x2="150" y2="64"/>
+          </g>
+        </g></svg>
+        <h3>Кирпичный дом</h3>
+        <div class="mat-label mono">кладка из кирпича</div>
+        <p class="desc">Классика с большим запасом прочности — стены кладутся рядами, ряд за рядом, на десятилетия вперёд.</p>
+        <ul>
+          <li>Служит 100–150 лет и не горит</li>
+          <li>Тепло зимой, прохладно летом</li>
+          <li>Хорошо гасит внешний шум</li>
+        </ul>
+        <a class="card-cta" href="#lead">Рассчитать стоимость →</a>
+      </div>
+
+      <div class="house-card">
+        <svg class="icon" viewBox="0 0 200 74"><g stroke="#221F17" stroke-width="1" fill="none" opacity="0.85">
+          <rect x="6" y="10" width="188" height="54"/>
+          <line x1="6" y1="28" x2="194" y2="28"/>
+          <line x1="6" y1="46" x2="194" y2="46"/>
+          <line x1="50" y1="10" x2="50" y2="28"/><line x1="100" y1="10" x2="100" y2="28"/><line x1="150" y1="10" x2="150" y2="28"/>
+          <line x1="30" y1="28" x2="30" y2="46"/><line x1="80" y1="28" x2="80" y2="46"/><line x1="130" y1="28" x2="130" y2="46"/><line x1="180" y1="28" x2="180" y2="46"/>
+          <line x1="50" y1="46" x2="50" y2="64"/><line x1="100" y1="46" x2="100" y2="64"/><line x1="150" y1="46" x2="150" y2="64"/>
+        </g></svg>
+        <h3>Дом из блоков</h3>
+        <div class="mat-label mono">газобетон / керамзитобетон</div>
+        <p class="desc">Крупные лёгкие блоки на тонком клеевом шве — быстрее в кладке, легче для фундамента.</p>
+        <ul>
+          <li>Хорошо держит тепло без доп. утепления</li>
+          <li>Меньшая нагрузка на фундамент</li>
+          <li>Ровные стены, тонкий отделочный слой</li>
+        </ul>
+        <a class="card-cta" href="#lead">Рассчитать стоимость →</a>
+      </div>
+
+      <div class="house-card">
+        <svg class="icon" viewBox="0 0 200 74"><g stroke="#221F17" stroke-width="1" fill="none" opacity="0.85">
+          <rect x="6" y="12" width="188" height="8"/>
+          <rect x="6" y="22" width="188" height="8"/>
+          <rect x="6" y="32" width="188" height="8"/>
+          <rect x="6" y="42" width="188" height="8"/>
+          <rect x="6" y="52" width="188" height="8"/>
+          <circle cx="20" cy="16" r="2.6"/><circle cx="180" cy="16" r="2.6"/>
+          <circle cx="20" cy="36" r="2.6"/><circle cx="180" cy="36" r="2.6"/>
+          <circle cx="20" cy="56" r="2.6"/><circle cx="180" cy="56" r="2.6"/>
+        </g></svg>
+        <h3>Дом из бруса</h3>
+        <div class="mat-label mono">брус, венец на венец</div>
+        <p class="desc">Стены собираются из горизонтальных венцов бруса — материал, который «дышит» и держит форму.</p>
+        <ul>
+          <li>Натуральный материал, комфортный микроклимат</li>
+          <li>Быстро прогревается</li>
+          <li>Часто не требует доп. отделки</li>
+        </ul>
+        <a class="card-cta" href="#lead">Рассчитать стоимость →</a>
+      </div>
+
+      <div class="house-card">
+        <svg class="icon" viewBox="0 0 200 74"><g stroke="#221F17" stroke-width="1" fill="none" opacity="0.85">
+          <rect x="6" y="10" width="188" height="54"/>
+          <line x1="50" y1="10" x2="50" y2="64"/>
+          <line x1="100" y1="10" x2="100" y2="64"/>
+          <line x1="150" y1="10" x2="150" y2="64"/>
+          <line x1="6" y1="10" x2="50" y2="64"/>
+          <line x1="50" y1="10" x2="100" y2="64"/>
+          <line x1="100" y1="10" x2="150" y2="64"/>
+          <line x1="150" y1="10" x2="194" y2="64"/>
+        </g></svg>
+        <h3>Каркасный дом</h3>
+        <div class="mat-label mono">несущий скелет + утеплитель</div>
+        <p class="desc">Каркас собирается быстро, стройка идёт круглый год — без «мокрых» и сезонных процессов.</p>
+        <ul>
+          <li>Коробка дома — за 2–4 недели</li>
+          <li>Доступная стоимость и лёгкий фундамент</li>
+          <li>Минимальная усадка, отделка сразу</li>
+        </ul>
+        <a class="card-cta" href="#lead">Рассчитать стоимость →</a>
+      </div>
+
+      <div class="house-card" style="background:var(--pine); border-color:var(--pine);">
+        <div style="height:74px; display:flex; align-items:center;">
+          <span class="eyebrow" style="color:var(--timber);">не определились?</span>
+        </div>
+        <h3 style="color:var(--paper);">Поможем выбрать на консультации</h3>
+        <p class="desc" style="color:rgba(238,231,216,0.7);">Расскажите про участок, бюджет и сроки — подберём технологию, которая впишется во всё сразу.</p>
+        <ul style="margin-top:auto;">
+          <li style="color:var(--paper);"><a class="phone-inline" style="color:var(--timber); border-color:rgba(238,231,216,0.3);" href="tel:+79148951309">+7 914 895-13-09</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="process">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="tag"><span class="tag-label">03 — Как мы работаем</span></div>
+      <h2>От первого разговора до новоселья</h2>
+    </div>
+    <div class="process">
+      <div class="step">
+        <span class="idx mono">01 · встреча</span>
+        <h3>Консультация и выбор технологии</h3>
+        <p>Обсуждаем участок, бюджет и сроки, подбираем материал и технологию строительства.</p>
+      </div>
+      <div class="step">
+        <span class="idx mono">02 · подготовка</span>
+        <h3>Проект и смета</h3>
+        <p>Разрабатываем планировку под вас, фиксируем смету — без сюрпризов на стройке.</p>
+      </div>
+      <div class="step" style="border-right:none;">
+        <span class="idx mono">03 · стройка</span>
+        <h3>Строительство под ключ</h3>
+        <p>Строим по проекту и графику, регулярно отчитываемся о ходе работ.</p>
+      </div>
+      <div class="step" style="border-right:none;">
+        <span class="idx mono">04 · сдача</span>
+        <h3>Сдача с гарантией</h3>
+        <p>Передаём ключи и даём письменную гарантию на конструктив и основные работы.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="lead">
+  <div class="wrap">
+    <div class="lead">
+      <div>
+        <div class="eyebrow">Бесплатный расчёт</div>
+        <h2 style="margin-top:14px;">Узнайте стоимость своего дома за 2 минуты</h2>
+        <p>Оставьте контакты и укажите технологию — перезвоним, уточним детали по участку и посчитаем предварительную смету.</p>
+        <div class="microtrust">Без давления и навязанных допуслуг</div>
+      </div>
+      <div>
+        <form class="lead-form" id="leadForm">
+          <div class="field">
+            <label for="lf-name">Имя</label>
+            <input id="lf-name" name="name" type="text" required placeholder="Как к вам обращаться">
+          </div>
+          <div class="field">
+            <label for="lf-phone">Телефон</label>
+            <input id="lf-phone" name="phone" type="tel" required placeholder="+7 ___ ___-__-__">
+          </div>
+          <div class="field">
+            <label for="lf-tech">Технология</label>
+            <select id="lf-tech" name="tech">
+              <option>Ещё не определился(-лась)</option>
+              <option>Монолит</option>
+              <option>Кирпич</option>
+              <option>Блоки</option>
+              <option>Брус</option>
+              <option>Каркас</option>
+            </select>
+          </div>
+          <button type="submit" class="btn">Получить расчёт</button>
+          <div class="lead-note">Нажимая кнопку, соглашаетесь на обработку данных</div>
+        </form>
+        <div class="thanks" id="leadThanks">
+          <h3>Заявка принята</h3>
+          <p>Свяжемся с вами в ближайшее время. Если срочно — звоните: <a class="phone-inline" href="tel:+79148951309">+7 914 895-13-09</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="dark blueprint-dark">
+  <div class="wrap contact-grid">
+    <div>
+      <div class="eyebrow">Как нас найти</div>
+      <h2>Обсудим ваш дом —<br>это займёт 15 минут</h2>
+      <ul class="contact-list">
+        <li><span class="k">Телефон</span><a href="tel:+79148951309">+7 914 895-13-09</a></li>
+        <li><span class="k">Почта</span><a href="mailto:patria.domum.951309@mail.ru">patria.domum.951309@mail.ru</a></li>
+        <li><span class="k">Офис</span><span>Иркутск, ул. Красноказачья, д. 115, оф. 437</span></li>
+      </ul>
+      <div class="social-row">
+        <a href="https://vk.ru/patriadomum" target="_blank" rel="noopener">VK</a>
+        <a href="https://max.ru/u/f9LHodD0cOKt2GVp2GRPJOLe0FqlyoWXgbt4LY7Zhqh8miMuDU9ZQovUdbU" target="_blank" rel="noopener">MAX</a>
+      </div>
+    </div>
+    <div>
+      <svg class="site-plan" viewBox="0 0 420 320" fill="none">
+        <g stroke="rgba(238,231,216,0.5)" stroke-width="1">
+          <rect x="30" y="30" width="360" height="260"/>
+          <line x1="30" y1="30" x2="10" y2="10"/>
+          <line x1="390" y1="30" x2="410" y2="10"/>
+          <line x1="30" y1="290" x2="10" y2="310"/>
+          <line x1="390" y1="290" x2="410" y2="310"/>
+        </g>
+        <g stroke="rgba(180,131,77,0.9)" stroke-width="1.2">
+          <rect x="70" y="70" width="130" height="90"/>
+          <rect x="230" y="70" width="120" height="60"/>
+          <line x1="70" y1="160" x2="200" y2="160"/>
+          <line x1="120" y1="160" x2="120" y2="220"/>
+        </g>
+        <circle cx="200" cy="220" r="3" fill="rgba(238,231,216,0.7)"/>
+        <text x="212" y="224" font-family="IBM Plex Mono, monospace" font-size="10" fill="rgba(238,231,216,0.6)">участок 12 сот.</text>
+        <text x="40" y="52" font-family="IBM Plex Mono, monospace" font-size="10" fill="rgba(238,231,216,0.5)">схема генплана</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap">
+  <span class="mono">© PATRIA DOMUM — строительство домов, Иркутск</span>
+  <span class="mono">PATRIA DOMUM (лат.) — родной дом</span>
+</footer>
+
+<div class="mobile-bar">
+  <a class="call" href="tel:+79148951309">Позвонить</a>
+  <a class="lead-btn" href="#lead">Оставить заявку</a>
+</div>
+
+<script>
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); } });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.house-card, .stat, .step').forEach(el=>{
+    el.classList.add('reveal');
+    io.observe(el);
+  });
+
+  // Front-end only: shows a confirmation state. To actually receive leads,
+  // connect this submit handler to a CRM/Telegram/email service.
+  const leadForm = document.getElementById('leadForm');
+  const leadThanks = document.getElementById('leadThanks');
+  if(leadForm){
+    leadForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      leadForm.style.display = 'none';
+      leadThanks.classList.add('show');
+    });
+  }
+</script>
+
+</body>
+</html>
